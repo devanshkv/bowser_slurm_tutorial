@@ -50,6 +50,6 @@ Bonus: You can run jupyter-notebooks as well. Replace `PPPP` in the following co
   
       `ssh -L PPPP:localhost:PPPP <username>@bowser.phys.wvu.edu ssh -L PPPP:localhost:PPPP <username>@node01`
       
-    eg:
+   eg:
     
       `ssh -L 8080:localhost:8080 dagarwal@bowser.phys.wvu.edu ssh -L 8080:localhost:8080 dagarwal@gpu01`
