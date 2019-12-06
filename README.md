@@ -4,34 +4,34 @@
 
 1. To submit a job:
 
-      `sbatch -N<number of nodes you require> -n<number of tasks> --wrap="<your command>"`
+       sbatch -N<number of nodes you require> -n<number of tasks> --wrap="<your command>"
       
    eg:
    
-      `sbatch -N1 -n1 --wrap="python hello_world.py -h"`
+       sbatch -N1 -n1 --wrap="python hello_world.py -h"
       
       This will give you a job ID.
       
 2. To check queue containing all the jobs:
 
-      `squeue`
+       squeue
       
 3. To query all the jobs by a user:
 
-      `squeue -u <username>`
+       squeue -u <username>
       
 4. To cancel a job:
 
-       `scancel <job_id>`
+       scancel <job_id>
       
     eg:
     
-       `scancel 7331112`
+       scancel 7331112
 
 
 5. To check available resources:
 
-       `sinfo`
+       sinfo
       
 6. To submit a GPU job:
 
