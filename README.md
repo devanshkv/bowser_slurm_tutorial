@@ -41,4 +41,4 @@
    
        sbatch -N1 -n1 --partition=gpu --gres=gpu:1 --wrap="nvidia-smi"
       
-7. To run a `jupyter-notebook` on one of the nodes, run [jupyter_bowser_cpu.sh](https://github.com/devanshkv/bowser_slurm_tutorial/blob/master/jupyter_bowser_cpu.sh). This will create `jupyter-notebook-<job_id>.log`. `cat` this file and it will give you the ssh tunnel command for MacOS or linux terminal along with the port and the token.
+7. To run a `jupyter-notebook` on one of the nodes, run [jupyter_bowser_cpu.sh](https://github.com/devanshkv/bowser_slurm_tutorial/blob/master/jupyter_bowser_cpu.sh) (or [jupyter_bowser_gpu.sh](https://github.com/devanshkv/bowser_slurm_tutorial/blob/master/jupyter_bowser_gpu.sh) for a gpu job). This will create `jupyter-notebook-<job_id>.log`. `cat` this file and it will give you the ssh tunnel command for MacOS or linux terminal along with the port and the token.
