@@ -2,6 +2,8 @@
 
 `bowser` has 20 CPU nodes and 3 GPU nodes at the moment. To schedule jobs we use a job scheduler [slurm](https://slurm.schedmd.com/documentation.html).
 
+We also have a data transfer node `remote.phys.wvu.edu` which can be used for high speed transfers.
+
 1. To submit a job:
 
        sbatch -N<number of nodes you require> -n<number of tasks> --wrap="<your command>"
