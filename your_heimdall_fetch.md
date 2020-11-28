@@ -10,7 +10,9 @@ conda activate your_fetch
 ```
 
 ## Heimdall
-Assuming you have filterbank files. Here is the help from `heimdall`:
+Assuming you have filterbank files. If you have PSRFITS files, use [`your_heimdall.py`](https://thepetabyteproject.github.io/your/bin/your_heimdall/) instead.
+
+Here is the help from `heimdall`:
 ```
 Usage: heimdall [options]
     -k  key                  use PSRDADA hexidecimal key
@@ -40,7 +42,7 @@ Usage: heimdall [options]
 ```
 
 So a sample command for
-- a fitlerbank with the name `name.fil`
+- a filterbank with the name `name.fil`
 - dm between 10 and 10,000 pc/cc
 - max pulse width of 512 samples
 ```
@@ -51,10 +53,10 @@ To run using slurm
 sbatch -n1 -N1 --partition=gpu --nodelist=notebook --gres=gpu:1 --wrap="heimdall -f name.fil -dm 10 10000 -boxcar_max 512"
 ```
 
-If you know bad channels to flag (lets say flag channels between 10 and 30), just add `-zap_chans 10 30` to the above command. This will create `.cand` files.
-The colums of the `.cand` files are:
+If you know bad channels to flag (let's say flag channels between 10 and 30), just add `-zap_chans 10 30` to the above command. This will create `.cand` files.
+The columns of the `.cand` files are:
 - Detection SNR
-- andidate Sample Number (for highest frequency channel)
+- candidate Sample Number (for highest frequency channel)
 - Candidate Time (s)
 - Boxcar Filter Number (e.g. 3 equates to 2^3 or 8 samples)
 - Dispersion Measure Trial Number
@@ -63,14 +65,14 @@ The colums of the `.cand` files are:
 - First sample that the candidate spans
 - Last sample that the candidate spans
 
-Next step is to run `candcsvmaker.py` to convert these `.cand` files to a format which [`your`](https://github.com/thepetabyteproject/your) can read.
+The next step is to run `candcsvmaker.py` to convert these `.cand` files to a format which [`your`](https://github.com/thepetabyteproject/your) can read.
 Here is the help:
 ```
 usage: candcsvmaker.py [-h] [-v] [-o FOUT] -f FIN [FIN ...] -c HEIM_CANDS
                        [HEIM_CANDS ...] [-k CHANNEL_MASK_PATH] [-s SNR_TH]
                        [-dl DM_MIN_TH] [-du DM_MAX_TH] [-g CLUSTERSIZE_TH]
 
-Your heimdall candidate csv maker
+Your Heimdall candidate csv maker
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -93,14 +95,14 @@ optional arguments:
   -g CLUSTERSIZE_TH, --clustersize_th CLUSTERSIZE_TH
                         Minimum cluster size allowed (default: 2)
 ```
-And to run it along with the above heimdall command, the example would go as:
+And to run it along with the above Heimdall command, the example would go as:
 ```
 candcsvmaker.py -f name.fil -c 2*cand
 ```
 This will create a file name `name.csv`.
 
 ## your
-Next step is making candidates, this is where [`your`](https://github.com/thepetabyteproject/your) comes in. Now we will make the candidates using the above generated csv file to make candidates. The command is called `your_candmaker.py`.
+The next step is making candidates; this is where [`your`](https://github.com/thepetabyteproject/your) comes in. Now we will make the candidates using the above-generated csv file to make candidates. The command is called `your_candmaker.py`.
 
 ```
 usage: your_candmaker.py [-h] [-v] [-fs FREQUENCY_SIZE]
@@ -129,7 +131,7 @@ optional arguments:
   -opt, --opt_dm        Optimise DM (default: False)
   --no_log_file         Do not write a log file (default: False)
 ```
-So to make candidates from the above file, its better to do the following:
+So to make candidates from the above file, it's better to do the following:
 - Create a directory called `cands` to save candidate files in.
 - Make several candidates in parallel to speed up the process.
 - Lets say we decide to make 5 candidates in parallel
@@ -137,8 +139,8 @@ So to make candidates from the above file, its better to do the following:
 ```
 your_candmaker.py -c name.csv -o cands/ -n 5
 ```
-To use a gpu with gpu ID 2 just add `-g 2` to the above command.
-The corresponding slurm command for using a gpu would be
+To use a GPU with GPU ID 2, add `-g 2` to the above command.
+The corresponding slurm command for using a GPU would be
 ```
 sbatch -n5 -N1 --partition=gpu --nodelist=notebook --gres=gpu:1 --wrap="your_candmaker.py -c name.csv -o cands/ -n 5 -g 0"
 ```
@@ -152,7 +154,7 @@ We would run `predict.py` who's help is below:
 usage: predict.py [-h] [-v] [-g GPU_ID] [-n NPROC] -c DATA_DIR [-b BATCH_SIZE]
                   -m MODEL [-p PROBABILITY]
 
-Fast Extragalactic Transient Candiate Hunter (FETCH)
+Fast Extragalactic Transient Candidate Hunter (FETCH)
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -178,7 +180,7 @@ and the corresponding slurm command would be
 ```
 sbatch -n1 -N1 --partition=gpu --nodelist=notebook --gres=gpu:1 --wrap="predict.py -m a -c cands/"
 ```
-This would produce a file named `results_a.csv` with candidate name, probability of it being a FRB and label (1=FRB, 0=RFI).
+This would produce a file named `results_a.csv` with candidate name, probability of it being an FRB, and label (1=FRB, 0=RFI).
 
 You can also plot the postively labelled candidates using `your_h5plotter.py`. The help is as follows:
 ```
@@ -196,7 +198,7 @@ optional arguments:
                         h5 files to be plotted (default: None)
   -c RESULTS_CSV, --results_csv RESULTS_CSV
                         Plot positives in results.csv (default: None)
-  --publish             Make publication quality plots (default: False)
+  --publish             Make publication-quality plots (default: False)
   --no_detrend_ft       Detrend the frequency-time plot (default: True)
   --no_save             Do not save the plot (default: True)
   -o OUT_DIR, --out_dir OUT_DIR
@@ -216,3 +218,64 @@ optional arguments:
   your_h5plotter.py -c results_a.csv
   ```
   This will generate png files that can be viewed easily.
+  
+## Citations 
+In the end add the following citations:
+
+### Your
+```
+@article{Aggarwal2020,
+  doi = {10.21105/joss.02750},
+  url = {https://doi.org/10.21105/joss.02750},
+  year = {2020},
+  month = nov,
+  publisher = {The Open Journal},
+  volume = {5},
+  number = {55},
+  pages = {2750},
+  author = {Kshitij Aggarwal and Devansh Agarwal and Joseph Kania and William Fiore and Reshma Thomas and Scott Ransom and Paul Demorest and Robert Wharton and Sarah Burke-Spolaor and Duncan Lorimer and Maura Mclaughlin and Nathaniel Garver-Daniels},
+  title = {Your: Your Unified Reader},
+  journal = {Journal of Open Source Software}
+}
+```
+### Heimdall
+```
+@article{Barsdell2012_Dedisp,
+  doi = {10.1111/j.1365-2966.2012.20622.x},
+  url = {https://doi.org/10.1111/j.1365-2966.2012.20622.x},
+  year = {2012},
+  month = mar,
+  publisher = {Oxford University Press ({OUP})},
+  volume = {422},
+  number = {1},
+  pages = {379--392},
+  author = {B. R. Barsdell and M. Bailes and D. G. Barnes and C. J. Fluke},
+  title = {Accelerating incoherent dedispersion},
+  journal = {Monthly Notices of the Royal Astronomical Society}
+}
+@phdthesis{Barsdell2012_Heimdall,
+       author = {{Barsdell}, B.~R.},
+        title = "{Advanced architectures for astrophysical supercomputing}",
+       school = {Swinburne University of Technology},
+         year = 2012,
+        month = jan,
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2012PhDT.......418B},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+```
+### FETCH
+```
+@article{Agarwal2020,
+  doi = {10.1093/mnras/staa1856},
+  url = {https://doi.org/10.1093/mnras/staa1856},
+  year = {2020},
+  month = jun,
+  publisher = {Oxford University Press ({OUP})},
+  volume = {497},
+  number = {2},
+  pages = {1661--1674},
+  author = {Devansh Agarwal and Kshitij Aggarwal and Sarah Burke-Spolaor and Duncan R Lorimer and Nathaniel Garver-Daniels},
+  title = {{FETCH}: A deep-learning based classifier for fast transient classification},
+  journal = {Monthly Notices of the Royal Astronomical Society}
+}
+```
