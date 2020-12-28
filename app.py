@@ -81,7 +81,7 @@ def show():
     st.write("### Type")
     input_dict["type_of_code"] = st.selectbox("", ["Script", "One Liner"])
 
-    st.write("### Parition")
+    st.write("### Partition")
     input_dict["partition"] = st.selectbox("", ["batch", "gpu"])
 
     st.write("### Number of compute nodes")
