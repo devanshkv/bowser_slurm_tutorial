@@ -1,0 +1,44 @@
+{% if type_of_code  == "Script" %}
+
+#!/bin/bash
+
+# Copy/paste this job script into a text file and submit with the command:
+#    sbatch thefilename
+
+#SBATCH --time={{ days_requested}}-{{ hours_requested }}   # walltime limit (DD-HH:MM)
+#SBATCH --nodes={{ no_of_nodes }}  # number of nodes
+#SBATCH --ntasks-per-node={{ nproc }}
+#SBATCH --mem={{ memory }}G   # maximum memory per node
+{% if partition == "gpu" %}
+#SBATCH --gres=gpu:{{ngpu}}
+{% endif %}
+#SBATCH --partition={{ partition }}
+{% if job_name %}
+#SBATCH --job-name="{{ job_name }}"
+{% endif %}
+{% if out_name %}
+#SBATCH --output="{{ out_name }}"
+{% endif %}
+
+# LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
+{{command}}
+
+{% else %}
+
+sbatch --nodes={{ no_of_nodes}} \
+       --ntasks-per-node={{ nproc }} \
+       --partition={{partition}} \
+       --time={{ days_requested}}-{{ hours_requested }}  \
+       --mem={{ memory}}G \
+       {% if partition == "gpu" %}
+       --gres=gpu:{{ngpu}} \
+       {% endif %}
+       {% if job_name %}
+       --job-name="{{ job_name }}" \
+       {% endif %}
+       {% if out_name %}
+       --output="{{ out_name }}" \
+       {% endif %}
+       --wrap="{{command}}"
+
+{% endif %}
