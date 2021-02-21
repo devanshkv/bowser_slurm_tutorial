@@ -124,6 +124,16 @@ def show():
     )
     input_dict["hours_requested"] = st.time_input("Hours", value=datetime.time(hour=7))
 
+    st.write("### Exclude Nodes")
+    if input_dict["partition"] == "batch":
+        options = [f"node{x+1:02d}" for x in range(20)]
+        default = None
+    else:
+        options = ["notebook", "gpu", "gpu01", "gpu02", "gpu03", "gpu04"]
+        default = "notebook"
+
+    input_dict["exclude"] = st.multiselect("", options=options, default=default)
+
     st.write("### Command")
     if input_dict["partition"] == "batch":
         input_dict["command"] = st.text_area("", value="sleep 60")
@@ -145,6 +155,7 @@ def show():
 st.set_page_config(
     page_title="Code Generator for Slurm on Bowser",
 )
+
 
 with st.sidebar:
     inputs = show()

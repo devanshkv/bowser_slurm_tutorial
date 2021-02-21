@@ -19,6 +19,9 @@
 {% if out_name %}
 #SBATCH --output="{{ out_name }}"
 {% endif %}
+{% if exclude %}
+#SBATCH --exclude="{{ ','.join(exclude) }}"
+{% endif %}
 
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
 {{command}}
@@ -32,6 +35,9 @@ sbatch --nodes={{ no_of_nodes}} \
        --mem={{ memory}}G \
        {% if partition == "gpu" %}
        --gres=gpu:{{ngpu}} \
+       {% endif %}
+       {% if exclude %}
+       --exclude="{{ ','.join(exclude) }}"\
        {% endif %}
        {% if job_name %}
        --job-name="{{ job_name }}" \
